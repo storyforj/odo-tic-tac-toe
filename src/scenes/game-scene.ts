@@ -25,7 +25,7 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player({
       scene: this,
       x: this.sys.canvas.width / 2,
-      y: this.sys.canvas.height - 40,
+      y: this.sys.canvas.height - 60,
       key: 'player'
     });
 

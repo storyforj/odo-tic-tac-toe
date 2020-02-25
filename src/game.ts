@@ -14,8 +14,8 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: false
-    }
+      debug: true,
+    },
   },
   backgroundColor: '#000',
   scale: {
@@ -25,7 +25,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 420,
     height: 700,
   },
-  render: { pixelArt: true, antialias: false }
+  render: { pixelArt: true, antialias: false, },
 };
 
 export class Game extends Phaser.Game {

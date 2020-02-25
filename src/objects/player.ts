@@ -31,7 +31,7 @@ export class Player extends Phaser.GameObjects.Image {
       runChildUpdate: true
     });
     this.lastShoot = 0;
-    this.flyingSpeed = 200;
+    this.flyingSpeed = 300;
   }
 
   private initImage(): void {
@@ -41,7 +41,7 @@ export class Player extends Phaser.GameObjects.Image {
   private initPhysics(): void {
     this.scene.physics.world.enable(this);
     // @ts-ignore
-    this.body.setSize(13, 8);
+    this.body.setSize(80, 73);
   }
 
   update(): void {
@@ -52,11 +52,11 @@ export class Player extends Phaser.GameObjects.Image {
   private handleFlying(): void {
     if (
       (this.cursors?.right?.isDown ?? false) &&
-      this.x < this.scene.sys.canvas.width - this.width / 2
+      this.x < this.scene.sys.canvas.width
     ) {
       // @ts-ignore
       this.body.setVelocityX(this.flyingSpeed);
-    } else if ((this.cursors?.left?.isDown ?? false) && this.x > this.width / 2) {
+    } else if ((this.cursors?.left?.isDown ?? false) && this.x > 0) {
       // @ts-ignore
       this.body.setVelocityX(-this.flyingSpeed);
     } else {
@@ -67,20 +67,20 @@ export class Player extends Phaser.GameObjects.Image {
 
   private handleShooting(): void {
     if (this.shootingKey.isDown && this.scene.time.now > this.lastShoot) {
-      if (this.bullets.getLength() < 1) {
+      if (this.bullets.getLength() < 40) {
         this.bullets.add(
           new Bullet({
             scene: this.scene,
             x: this.x,
             y: this.y - this.height,
-            key: 'bullet',
+            key: 'player-bullet',
             bulletProperties: {
-              speed: -300
+              speed: -800
             }
           })
         );
 
-        this.lastShoot = this.scene.time.now + 500;
+        this.lastShoot = this.scene.time.now;
       }
     }
   }

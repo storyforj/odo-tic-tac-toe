@@ -9,12 +9,17 @@
       {
         "type": "image",
         "key": "bullet",
-        "url": "assets/sprites/bullet.png"
+        "url": "assets/enemy-bullet.png"
+      },
+      {
+        "type": "image",
+        "key": "player-bullet",
+        "url": "assets/player-bullet.png"
       },
       {
         "type": "image",
         "key": "player",
-        "url": "assets/sprites/player.png"
+        "url": "assets/player-ship.png"
       },
       {
         "type": "spritesheet",
