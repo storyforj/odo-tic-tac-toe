@@ -67,12 +67,23 @@ export class Player extends Phaser.GameObjects.Image {
 
   private handleShooting(): void {
     if (this.shootingKey.isDown && this.scene.time.now > this.lastShoot) {
-      if (this.bullets.getLength() < 40) {
+      if (this.bullets.getLength() < 80) {
         this.bullets.add(
           new Bullet({
             scene: this.scene,
-            x: this.x,
-            y: this.y - this.height,
+            x: this.x - 13,
+            y: this.y - this.height + 20,
+            key: 'player-bullet',
+            bulletProperties: {
+              speed: -800
+            }
+          })
+        );
+        this.bullets.add(
+          new Bullet({
+            scene: this.scene,
+            x: this.x + 12,
+            y: this.y - this.height + 20,
             key: 'player-bullet',
             bulletProperties: {
               speed: -800
