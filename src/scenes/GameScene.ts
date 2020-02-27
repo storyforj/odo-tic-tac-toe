@@ -1,5 +1,5 @@
-import { Enemy } from '../objects/enemy';
-import { Player } from '../objects/player';
+import { Enemy } from '../objects/Enemy';
+import { Player } from '../objects/Player';
 
 export class GameScene extends Phaser.Scene {
   private enemies!: Phaser.GameObjects.Group;
@@ -7,7 +7,8 @@ export class GameScene extends Phaser.Scene {
 
   constructor() {
     super({
-      key: 'GameScene'
+      key: 'GameScene',
+      active: true,
     });
   }
 
@@ -58,26 +59,28 @@ export class GameScene extends Phaser.Scene {
   update(): void {
     if (this.player.active) {
       this.player.update();
-
-      // @ts-ignore
-      this.enemies.children.each((enemy: Enemy): void => {
-        enemy.update();
-        if (enemy.getBullets().getLength() > 0) {
-          this.physics.overlap(
-            enemy.getBullets(),
-            this.player,
-            this.bulletHitPlayer,
-            undefined,
-            this
-          );
-        }
-      }, this);
-
-      this.checkCollisions();
+      this.checkPlayerBulletCollisions();
+      this.checkEnemyBulletCollisions();
     }
   }
 
-  private checkCollisions(): void {
+  private checkPlayerBulletCollisions(): void {
+    // @ts-ignore
+    this.enemies.children.each((enemy: Enemy): void => {
+      enemy.update();
+      if (enemy.getBullets().getLength() > 0) {
+        this.physics.overlap(
+          enemy.getBullets(),
+          this.player,
+          this.bulletHitPlayer,
+          undefined,
+          this
+        );
+      }
+    }, this);
+  }
+
+  private checkEnemyBulletCollisions(): void {
     this.physics.overlap(
       this.player.getBullets(),
       this.enemies,

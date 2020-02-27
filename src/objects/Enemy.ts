@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Bullet } from './bullet';
+import { Bullet } from './Bullet';
 
 export type EnemyOptions = {
   scene: Phaser.Scene,
@@ -97,7 +97,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 
   update(): void {
     if (this.active) {
-      this.anims.play(this.enemyType + 'Fly', true);
+      // this.anims.play(this.enemyType + 'Fly', true);
 
       if (Phaser.Math.RND.between(0, this.reloadTime) === 0) {
         this.bullets.add(
@@ -128,7 +128,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
         }
       }
     } else {
-      this.anims.play(this.enemyType + 'Dead');
+      // this.anims.play(this.enemyType + 'Dead');
 
       if (this.dyingTime > 0) {
         this.dyingTime -= 10;

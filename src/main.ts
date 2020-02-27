@@ -1,11 +1,12 @@
 import 'phaser';
 
-import { GameScene } from './scenes/game-scene';
+import { GameScene } from './scenes/GameScene';
+import { IntroScene } from './scenes/IntroScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'game',
-  scene: [GameScene],
+  scene: [GameScene, IntroScene],
   input: {
     touch: true,
     mouse: true,
@@ -14,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: true,
+      debug: false,
     },
   },
   backgroundColor: '#000',

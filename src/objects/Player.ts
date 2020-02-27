@@ -1,4 +1,4 @@
-import { Bullet } from './bullet';
+import { Bullet } from './Bullet';
 
 export class Player extends Phaser.GameObjects.Image {
   private bullets!: Phaser.GameObjects.Group;
@@ -75,7 +75,7 @@ export class Player extends Phaser.GameObjects.Image {
             y: this.y - this.height + 20,
             key: 'player-bullet',
             bulletProperties: {
-              speed: -800
+              speed: -800,
             }
           })
         );
@@ -86,7 +86,7 @@ export class Player extends Phaser.GameObjects.Image {
             y: this.y - this.height + 20,
             key: 'player-bullet',
             bulletProperties: {
-              speed: -800
+              speed: -800,
             }
           })
         );

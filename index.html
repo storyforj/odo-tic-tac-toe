@@ -2,11 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="author" content="digitsensitive">
-    <title>Hmmm!</title>
+    <title>ODO Shmup Example</title>
     <script src="dist/bundle.js"></script>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+      }
+
+      body * {
+        box-sizing: border-box;
+      }
+
+      @font-face {
+        font-family: robotomono;
+        src: url('assets/RobotoMono-Bold.ttf');
+        font-weight: 700;
+        font-weight: normal;
+      }
+      .fontLoader {
+        position: absolute;
+        left: -1000px;
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
+    <div class='fontLoader' style='font-family: robotomono;'>-</div>
     <div id="game"></div>
   </body>
 </html>
