@@ -11,7 +11,6 @@ export type BulletOptions = {
 };
 
 export class Bullet extends Phaser.Physics.Matter.Image {
-  public label: string = 'bullet';
   private bulletSpeed!: number;
   private collisionCategory: number;
 

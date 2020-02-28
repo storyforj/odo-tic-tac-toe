@@ -1,8 +1,6 @@
 import { Bullet } from './Bullet';
 
 export class Player extends Phaser.Physics.Matter.Image {
-  public label: string = 'player';
-
   private bullets!: Phaser.GameObjects.Group;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private flyingSpeed!: number;

@@ -23,8 +23,6 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
     'boss', undefined,
     { shape: bodies.bossPolygon } as Phaser.Types.Physics.Matter.MatterBodyConfig,
   );
-  // @ts-ignore
-  bossSprite.label = 'boss'
   bossSprite.setCollisionCategory(collisionCategory);
   bossSprite.setScale(0.4, 0.4);
 
@@ -57,11 +55,11 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
     let bulletBody;
     let bossBody;
 
-    if (bodyA.gameObject.label === 'bullet' && bodyB.gameObject.label === 'boss') {
+    if (bodyA.label === 'playerBulletPolygon' && bodyB.label === 'bossBody') {
       bulletBody = bodyA;
       bossBody = bodyB;
     }
-    if (bodyA.gameObject.label === 'boss' && bodyB.gameObject.label === 'bullet') {
+    if (bodyA.label === 'bossBody' && bodyB.label === 'playerBulletPolygon') {
       bulletBody = bodyB;
       bossBody = bodyA;
     }
