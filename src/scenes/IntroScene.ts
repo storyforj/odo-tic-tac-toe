@@ -4,9 +4,10 @@ const textLines = [
   'WARNING!',
   'WARNING!',
   'HOSTILES DETECTED',
-  'HOSTILES INCOMING',
+  'HOSTILES DETECTED',
 ];
 const linePauseLength = 1000;
+const startPauseLength = 100;
 const endPauseLength = 3000;
 const defaultWriteDelay = 50;
 
@@ -17,8 +18,8 @@ export class IntroScene extends Phaser.Scene {
   private text!: Phaser.GameObjects.Text;
   private currentTextLine: number = 0;
   private currentTextChar: number = 0;
-  private timeSinceLastWrite: number = 0;
-  private currentWriteDelay: number = defaultWriteDelay;
+  private timeSinceLastWrite: number = Date.now();
+  private currentWriteDelay: number = startPauseLength;
   private isFinished: boolean = false;
   private triggers: Trigger[] = [
     {
@@ -56,7 +57,7 @@ export class IntroScene extends Phaser.Scene {
     {
       init: () => {
         const textBoxSizeHeight = 30;
-        const textBoxSizeWidth = 180;
+        const textBoxSizeWidth = 184;
         this.textBox = this.add.graphics();
         this.textBox.lineStyle(4, 0xffffff, 1);
         //  32px radius on the corners
@@ -140,16 +141,12 @@ export class IntroScene extends Phaser.Scene {
     });
   }
 
-  preload() {
-    this.load.pack('preload', 'assets/pack.json', 'preload');
-  }
-
   create(): void {
     this.sequencer = new Sequencer(this.triggers);
   }
 
   update(): void {
-    this.sequencer.update();
+    this.sequencer && this.sequencer.update();
   }
 
   shouldRemoveOverlay(): boolean {

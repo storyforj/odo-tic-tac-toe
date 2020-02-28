@@ -18,11 +18,15 @@ type ActiveTriggersReducer = {
 };
 
 export default class Sequencer {
-  public activeTriggers: Array<Trigger> = [];
-  public pendingTriggers: Array<Trigger> = [];
+  private activeTriggers: Array<Trigger> = [];
+  private pendingTriggers: Array<Trigger> = [];
 
   constructor(pendingTriggers: Array<Trigger> = []) {
     this.pendingTriggers = pendingTriggers;
+  }
+
+  public addTrigger(trigger: Trigger) {
+    this.pendingTriggers.push(trigger);
   }
 
   private processPendingTriggers() {

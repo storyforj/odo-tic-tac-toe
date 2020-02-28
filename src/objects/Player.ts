@@ -1,17 +1,22 @@
 import { Bullet } from './Bullet';
 
-export class Player extends Phaser.GameObjects.Image {
+export class Player extends Phaser.Physics.Matter.Image {
+  public label: string = 'player';
+
   private bullets!: Phaser.GameObjects.Group;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private flyingSpeed!: number;
   private lastShoot!: number;
   private shootingKey!: Phaser.Input.Keyboard.Key;
+  private collsionCategory: number;
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
   }
 
   constructor(params) {
-    super(params.scene, params.x, params.y, params.key);
+    super(params.scene.matter.world, params.x, params.y, params.key);
+
+    this.collsionCategory = params.collsionCategory;
 
     this.initVariables();
     this.initImage();
@@ -31,7 +36,7 @@ export class Player extends Phaser.GameObjects.Image {
       runChildUpdate: true
     });
     this.lastShoot = 0;
-    this.flyingSpeed = 300;
+    this.flyingSpeed = 5;
   }
 
   private initImage(): void {
@@ -39,9 +44,10 @@ export class Player extends Phaser.GameObjects.Image {
   }
 
   private initPhysics(): void {
-    this.scene.physics.world.enable(this);
     // @ts-ignore
-    this.body.setSize(80, 73);
+    this.setSize(80, 73);
+    this.setScale(0.8, 0.8);
+    this.scene.matter.world.add(this);
   }
 
   update(): void {
@@ -55,18 +61,20 @@ export class Player extends Phaser.GameObjects.Image {
       this.x < this.scene.sys.canvas.width
     ) {
       // @ts-ignore
-      this.body.setVelocityX(this.flyingSpeed);
+      this.setVelocityX(this.flyingSpeed);
     } else if ((this.cursors?.left?.isDown ?? false) && this.x > 0) {
       // @ts-ignore
-      this.body.setVelocityX(-this.flyingSpeed);
+      this.setVelocityX(-this.flyingSpeed);
     } else {
       // @ts-ignore
-      this.body.setVelocityX(0);
+      this.setVelocityX(0);
     }
   }
 
   private handleShooting(): void {
-    if (this.shootingKey.isDown && this.scene.time.now > this.lastShoot) {
+    // 16ms * 3 = 48, 48ms is our magic number. We want this because at 60 fps (16ms per frame) we'd get 120 shots, divide by 3 and we got 40 shots per second.
+    // shooting too fast means missing collisions between frames
+    if (this.shootingKey.isDown && this.scene.time.now - this.lastShoot >= 48) {
       if (this.bullets.getLength() < 80) {
         this.bullets.add(
           new Bullet({
@@ -75,8 +83,9 @@ export class Player extends Phaser.GameObjects.Image {
             y: this.y - this.height + 20,
             key: 'player-bullet',
             bulletProperties: {
-              speed: -800,
-            }
+              speed: -10,
+            },
+            collisionCategory: this.collsionCategory,
           })
         );
         this.bullets.add(
@@ -86,8 +95,9 @@ export class Player extends Phaser.GameObjects.Image {
             y: this.y - this.height + 20,
             key: 'player-bullet',
             bulletProperties: {
-              speed: -800,
-            }
+              speed: -10,
+            },
+            collisionCategory: this.collsionCategory,
           })
         );
 

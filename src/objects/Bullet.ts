@@ -6,13 +6,21 @@ export type BulletOptions = {
   bulletProperties: {
     speed: number
   },
+  collisionCategory: number
 };
 
-export class Bullet extends Phaser.GameObjects.Image {
+export class Bullet extends Phaser.Physics.Matter.Image {
+  public label: string = 'bullet';
   private bulletSpeed!: number;
+  private collisionCategory: number;
 
   constructor(params: BulletOptions) {
-    super(params.scene, params.x, params.y, params.key);
+    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { isSensor: true });
+    this.collisionCategory = params.collisionCategory;
+
+    this.on('collisionstart', () => {
+      this.destroy();
+    });
 
     this.initVariables(params);
     this.initImage();
@@ -30,11 +38,12 @@ export class Bullet extends Phaser.GameObjects.Image {
   }
 
   private initPhysics(): void {
-    this.scene.physics.world.enable(this);
+    this.setCollisionGroup(this.collisionCategory);
+    this.scene.matter.world.add(this);
     // @ts-ignore
-    this.body.setVelocityY(this.bulletSpeed);
+    this.setVelocityY(this.bulletSpeed);
     // @ts-ignore
-    this.body.setSize(1, 8);
+    this.setSize(1, 8);
   }
 
   update(): void {

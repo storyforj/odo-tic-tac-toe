@@ -2,6 +2,7 @@
   "name": "odo-shmup",
   "version": "0.0.1",
   "devDependencies": {
+    "@types/matter-js": "^0.10.9",
     "expose-loader": "0.7.5",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.2",

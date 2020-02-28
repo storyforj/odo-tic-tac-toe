@@ -12,10 +12,10 @@ const config: Phaser.Types.Core.GameConfig = {
     mouse: true,
   },
   physics: {
-    default: 'arcade',
-    arcade: {
+    default: 'matter',
+    matter: {
       gravity: { y: 0 },
-      debug: false,
+      debug: true,
     },
   },
   backgroundColor: '#000',
