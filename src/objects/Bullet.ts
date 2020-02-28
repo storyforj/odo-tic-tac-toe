@@ -15,7 +15,7 @@ export class Bullet extends Phaser.Physics.Matter.Image {
   private collisionCategory: number;
 
   constructor(params: BulletOptions) {
-    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { isSensor: true, shape: params.scene.cache.json.get('polygons')[params.polygonKey] } as Phaser.Types.Physics.Matter.MatterBodyConfig);
+    super(params.scene.matter.world, params.x, params.y, 'sceneatlas', params.key, { isSensor: true, shape: params.scene.cache.json.get('bodies')[params.polygonKey] } as Phaser.Types.Physics.Matter.MatterBodyConfig);
     this.collisionCategory = params.collisionCategory;
 
     this.initVariables(params);

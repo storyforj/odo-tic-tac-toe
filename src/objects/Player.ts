@@ -12,7 +12,7 @@ export class Player extends Phaser.Physics.Matter.Image {
   }
 
   constructor(params) {
-    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { shape: params.scene.cache.json.get('polygons').playerPolygon } as Phaser.Types.Physics.Matter.MatterBodyConfig);
+    super(params.scene.matter.world, params.x, params.y, 'sceneatlas', params.key, { shape: params.scene.cache.json.get('bodies').player } as Phaser.Types.Physics.Matter.MatterBodyConfig);
 
     this.collsionCategory = params.collsionCategory;
 
@@ -71,10 +71,10 @@ export class Player extends Phaser.Physics.Matter.Image {
         this.bullets.add(
           new Bullet({
             scene: this.scene,
-            x: this.x - 13,
+            x: this.x - 10,
             y: this.y - this.height + 20,
-            key: 'player-bullet',
-            polygonKey: 'playerBulletPolygon',
+            key: 'player-bullet.png',
+            polygonKey: 'playerBullet',
             bulletProperties: {
               speed: -10,
             },
@@ -84,10 +84,10 @@ export class Player extends Phaser.Physics.Matter.Image {
         this.bullets.add(
           new Bullet({
             scene: this.scene,
-            x: this.x + 12,
+            x: this.x + 10,
             y: this.y - this.height + 20,
-            key: 'player-bullet',
-            polygonKey: 'playerBulletPolygon',
+            key: 'player-bullet.png',
+            polygonKey: 'playerBullet',
             bulletProperties: {
               speed: -10,
             },

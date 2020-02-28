@@ -13,15 +13,15 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.pack('preload', 'assets/pack.json', 'preload');
+    this.load.multiatlas('sceneatlas', 'assets/atlas.json', 'assets');
     this.load.css('styles/styles');
-    this.load.json('polygons', 'assets/polygons.json');
+    this.load.json('bodies', 'assets/atlasBodies.json');
   }
 
   create(): void {
-    this.matter.world.createDebugGraphic();
-    this.matter.world.drawDebug = true;
-    this.matter.world.debugGraphic.visible = true;
+    // this.matter.world.createDebugGraphic();
+    // this.matter.world.drawDebug = true;
+    // this.matter.world.debugGraphic.visible = true;
 
     const enemyCategory = this.matter.world.nextCategory();
     const playerCategory = this.matter.world.nextCategory();
@@ -31,7 +31,7 @@ export class GameScene extends Phaser.Scene {
       scene: this,
       x: this.sys.canvas.width / 2,
       y: this.sys.canvas.height - 60,
-      key: 'player',
+      key: 'player-ship.png',
       collisionCategory: playerCategory,
     });
     this.boss = createBoss(this, enemyCategory);

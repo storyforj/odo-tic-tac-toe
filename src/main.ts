@@ -15,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'matter',
     matter: {
       gravity: { y: 0 },
-      debug: true,
+      debug: false,
     },
   },
   backgroundColor: '#000',
@@ -26,7 +26,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 420,
     height: 700,
   },
-  render: { pixelArt: true, antialias: false, },
+  render: { pixelArt: true, antialias: true },
 };
 
 export class Game extends Phaser.Game {
