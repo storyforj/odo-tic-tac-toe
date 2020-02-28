@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
   preload() {
     this.load.pack('preload', 'assets/pack.json', 'preload');
     this.load.css('styles/styles');
-    this.load.json('bossPolygons', 'assets/bossPolygons.json');
+    this.load.json('polygons', 'assets/polygons.json');
   }
 
   create(): void {

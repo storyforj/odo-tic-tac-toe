@@ -10,7 +10,7 @@ export type BossUpdater = {
 const explosionAmount = 10000;
 
 export default function createBoss(scene: Phaser.Scene, collisionCategory: number): BossUpdater {
-  const bossPolygons = scene.cache.json.get('bossPolygons');
+  const bodies = scene.cache.json.get('polygons');
 
   let hp: number = 21500;
   let leftEngineHP: number = 1000;
@@ -21,7 +21,7 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
   const bossSprite: Phaser.Physics.Matter.Sprite = scene.matter.add.sprite(
     0, 0,
     'boss', undefined,
-    { shape: bossPolygons.bossPolygon } as Phaser.Types.Physics.Matter.MatterBodyConfig,
+    { shape: bodies.bossPolygon } as Phaser.Types.Physics.Matter.MatterBodyConfig,
   );
   // @ts-ignore
   bossSprite.label = 'boss'
@@ -31,7 +31,6 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
   function bodyHit(bullet: Bullet): void {
     bullet.destroy();
     hp -= 1;
-    console.log('body', hp);
   }
 
   function leftEngineHit(bullet: Bullet): void {
@@ -39,10 +38,8 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
     if (leftEngineHP === 0 && !leftEngineDestroyed) {
       leftEngineDestroyed = true;
       hp -= explosionAmount;
-      console.log('left engine boom', hp);
     } else if (leftEngineHP > 0) {
       leftEngineHP -= 1;
-      console.log('left', leftEngineHP);
     }
   }
 
@@ -51,10 +48,8 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
     if (rightEngineHP === 0 && !rightEngineDestroyed) {
       rightEngineDestroyed = true;
       hp -= explosionAmount;
-      console.log('right engine boom', hp);
     } else if (rightEngineHP > 0) {
       rightEngineHP -= 1;
-      console.log('right', rightEngineHP);
     }
   }
 

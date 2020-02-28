@@ -14,7 +14,7 @@ export class Player extends Phaser.Physics.Matter.Image {
   }
 
   constructor(params) {
-    super(params.scene.matter.world, params.x, params.y, params.key);
+    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { shape: params.scene.cache.json.get('polygons').playerPolygon } as Phaser.Types.Physics.Matter.MatterBodyConfig);
 
     this.collsionCategory = params.collsionCategory;
 
@@ -44,9 +44,6 @@ export class Player extends Phaser.Physics.Matter.Image {
   }
 
   private initPhysics(): void {
-    // @ts-ignore
-    this.setSize(80, 73);
-    this.setScale(0.8, 0.8);
     this.scene.matter.world.add(this);
   }
 
@@ -60,13 +57,10 @@ export class Player extends Phaser.Physics.Matter.Image {
       (this.cursors?.right?.isDown ?? false) &&
       this.x < this.scene.sys.canvas.width
     ) {
-      // @ts-ignore
       this.setVelocityX(this.flyingSpeed);
     } else if ((this.cursors?.left?.isDown ?? false) && this.x > 0) {
-      // @ts-ignore
       this.setVelocityX(-this.flyingSpeed);
     } else {
-      // @ts-ignore
       this.setVelocityX(0);
     }
   }
@@ -82,6 +76,7 @@ export class Player extends Phaser.Physics.Matter.Image {
             x: this.x - 13,
             y: this.y - this.height + 20,
             key: 'player-bullet',
+            polygonKey: 'playerBulletPolygon',
             bulletProperties: {
               speed: -10,
             },
@@ -94,6 +89,7 @@ export class Player extends Phaser.Physics.Matter.Image {
             x: this.x + 12,
             y: this.y - this.height + 20,
             key: 'player-bullet',
+            polygonKey: 'playerBulletPolygon',
             bulletProperties: {
               speed: -10,
             },

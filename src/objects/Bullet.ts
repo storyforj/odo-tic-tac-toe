@@ -3,6 +3,7 @@ export type BulletOptions = {
   x: number,
   y: number,
   key: string,
+  polygonKey: string,
   bulletProperties: {
     speed: number
   },
@@ -15,12 +16,8 @@ export class Bullet extends Phaser.Physics.Matter.Image {
   private collisionCategory: number;
 
   constructor(params: BulletOptions) {
-    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { isSensor: true });
+    super(params.scene.matter.world, params.x, params.y, params.key, undefined, { isSensor: true, shape: params.scene.cache.json.get('polygons')[params.polygonKey] } as Phaser.Types.Physics.Matter.MatterBodyConfig);
     this.collisionCategory = params.collisionCategory;
-
-    this.on('collisionstart', () => {
-      this.destroy();
-    });
 
     this.initVariables(params);
     this.initImage();
