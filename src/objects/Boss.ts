@@ -2,7 +2,6 @@ import * as Phaser from 'phaser';
 
 import Sequencer, { Trigger } from '../helpers/Sequencer';
 import { Bullet } from './Bullet';
-import { Vector } from 'matter';
 
 export type BossUpdater = {
   update: () => void
@@ -10,7 +9,7 @@ export type BossUpdater = {
 
 const explosionAmount = 10000;
 
-export default function createBoss(scene: Phaser.Scene, collisionCategory: number): BossUpdater {
+export default function createBoss(scene: Phaser.Scene): BossUpdater {
   const bodies = scene.cache.json.get('bodies');
 
   let hp: number = 21500;
@@ -27,60 +26,38 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
       render: { sprite: { xOffset: -0.019, yOffset: -0.03 } }, // not sure why things are misaligned
     } as Phaser.Types.Physics.Matter.MatterBodyConfig,
   );
-  bossSprite.setCollisionCategory(collisionCategory);
 
-  const bulletExplosionFrameNames = scene.anims.generateFrameNames('sceneatlas', {
-    start: 0, end: 5, zeroPad: 4,
-    prefix: 'playerBulletExplosion/explo_', suffix: '.png'
-  });
-  scene.anims.create({
-    key: 'bulletExplosion',
-    frames: bulletExplosionFrameNames,
-    frameRate: 60,
-    repeat: 0,
-    hideOnComplete: true,
-  });
-
-  function createBulletExplosion(event: Phaser.Physics.Matter.Events.CollisionStartEvent) {
-    // @ts-ignore
-    const collision: Vector = event.pairs[0].activeContacts[0].vertex ?? null;
-    const bulletExplosion = scene.add.sprite(collision.x, collision.y, 'sceneatlas', 'playerBulletExplosion/explo_0000.png');
-    bulletExplosion.setScale(0.5, 0.5);
-    bulletExplosion.anims.play('bulletExplosion');
-    bulletExplosion.on('animationcomplete', () => {
-      bulletExplosion.destroy();
-    });
-  }
-
-  function bodyHit(event: Phaser.Physics.Matter.Events.CollisionStartEvent, bullet: Bullet): void {
+  function bodyHit(bullet: Bullet): void {
+    bullet.createBulletExplosion();
     bullet.destroy();
     hp -= 1;
-    createBulletExplosion(event);
   }
 
-  function leftEngineHit(event: Phaser.Physics.Matter.Events.CollisionStartEvent, bullet: Bullet): void {
-    bullet.destroy();
+  function leftEngineHit(bullet: Bullet): void {
     if (leftEngineHP === 0 && !leftEngineDestroyed) {
       leftEngineDestroyed = true;
       hp -= explosionAmount;
+      bullet.destroy();
     } else if (leftEngineHP > 0) {
       leftEngineHP -= 1;
-      createBulletExplosion(event);
+      bullet.createBulletExplosion();
+      bullet.destroy();
     }
   }
 
-  function rightEngineHit(event: Phaser.Physics.Matter.Events.CollisionStartEvent, bullet: Bullet): void {
-    bullet.destroy();
+  function rightEngineHit(bullet: Bullet): void {
     if (rightEngineHP === 0 && !rightEngineDestroyed) {
       rightEngineDestroyed = true;
       hp -= explosionAmount;
+      bullet.destroy();
     } else if (rightEngineHP > 0) {
       rightEngineHP -= 1;
-      createBulletExplosion(event);
+      bullet.createBulletExplosion();
+      bullet.destroy();
     }
   }
 
-  scene.matter.world.on('collisionstart', function (event: Phaser.Physics.Matter.Events.CollisionStartEvent, bodyA: MatterJS.BodyType, bodyB: MatterJS.BodyType) {
+  function handleCollision(_event: Phaser.Physics.Matter.Events.CollisionStartEvent, bodyA: MatterJS.BodyType, bodyB: MatterJS.BodyType) {
     let bulletBody;
     let bossBody;
 
@@ -96,16 +73,22 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
     if (bulletBody && bossBody) {
       switch(bossBody.label) {
         case 'bossLeftEngine':
-          leftEngineHit(event, bulletBody.gameObject);
+          leftEngineHit(bulletBody.gameObject);
           break;
         case 'bossRightEngine':
-          rightEngineHit(event, bulletBody.gameObject);
+          rightEngineHit(bulletBody.gameObject);
           break;
         default:
-          bodyHit(event, bulletBody.gameObject);
+          bodyHit(bulletBody.gameObject);
           break;
       }
     }
+  }
+
+  scene.matter.world.on('collisionstart', function (event: Phaser.Physics.Matter.Events.CollisionStartEvent) {
+    event.pairs.forEach((pair) => {
+      handleCollision(event, pair.bodyA, pair.bodyB);
+    });
   });
 
   const sequencer: Sequencer = new Sequencer([
@@ -147,7 +130,15 @@ export default function createBoss(scene: Phaser.Scene, collisionCategory: numbe
           yoyo: true,
           repeat: 10,
           onComplete: () => {
-            bossSprite.destroy();
+            const shipExplosion = scene.add.sprite(bossSprite.x, bossSprite.y, 'sceneatlas', 'bossShipExplosion/Explo__000.png');
+            shipExplosion.setScale(1.2, 1.2);
+            shipExplosion.setAlpha(1.0);
+            shipExplosion.anims.play('shipExplosion');
+            shipExplosion.on('animationcomplete', () => {
+              shipExplosion.destroy();
+            });
+
+            bossSprite.setActive(false);
           },
         });
       },

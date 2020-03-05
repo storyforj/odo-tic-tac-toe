@@ -1,20 +1,21 @@
+import * as throttle from 'lodash.throttle';
+
 import { Bullet } from './Bullet';
+
+// 16ms * 3 = 48, 48ms is our magic number. We want this because at 60 fps (16ms per frame) we'd get 120 shots, divide by 3 and we got 40 shots per second.
+const shotRate = 48;
 
 export class Player extends Phaser.Physics.Matter.Image {
   private bullets!: Phaser.GameObjects.Group;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private flyingSpeed!: number;
-  private lastShoot!: number;
   private shootingKey!: Phaser.Input.Keyboard.Key;
-  private collsionCategory: number;
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
   }
 
   constructor(params) {
     super(params.scene.matter.world, params.x, params.y, 'sceneatlas', params.key, { shape: params.scene.cache.json.get('bodies').player } as Phaser.Types.Physics.Matter.MatterBodyConfig);
-
-    this.collsionCategory = params.collsionCategory;
 
     this.initVariables();
     this.initImage();
@@ -24,8 +25,9 @@ export class Player extends Phaser.Physics.Matter.Image {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
 
-    this.initPhysics();
+    this.scene.input.on('pointermove', this.handleDragFlying, this);
 
+    this.scene.matter.world.add(this);
     this.scene.add.existing(this);
   }
 
@@ -33,7 +35,6 @@ export class Player extends Phaser.Physics.Matter.Image {
     this.bullets = this.scene.add.group({
       runChildUpdate: true
     });
-    this.lastShoot = 0;
     this.flyingSpeed = 5;
   }
 
@@ -41,13 +42,11 @@ export class Player extends Phaser.Physics.Matter.Image {
     this.setOrigin(0.5, 0.5);
   }
 
-  private initPhysics(): void {
-    this.scene.matter.world.add(this);
-  }
-
   update(): void {
     this.handleFlying();
-    this.handleShooting();
+    if (this.shootingKey.isDown || this.scene.input.activePointer.isDown) {
+      this.handleShooting();
+    }
   }
 
   private handleFlying(): void {
@@ -63,42 +62,39 @@ export class Player extends Phaser.Physics.Matter.Image {
     }
   }
 
-  private handleShooting(): void {
-    // 16ms * 3 = 48, 48ms is our magic number. We want this because at 60 fps (16ms per frame) we'd get 120 shots, divide by 3 and we got 40 shots per second.
-    // shooting too fast means missing collisions between frames
-    if (this.shootingKey.isDown && this.scene.time.now - this.lastShoot >= 48) {
-      if (this.bullets.getLength() < 80) {
-        this.bullets.add(
-          new Bullet({
-            scene: this.scene,
-            x: this.x - 10,
-            y: this.y - this.height + 20,
-            key: 'player-bullet.png',
-            polygonKey: 'playerBullet',
-            bulletProperties: {
-              speed: -10,
-            },
-            collisionCategory: this.collsionCategory,
-          })
-        );
-        this.bullets.add(
-          new Bullet({
-            scene: this.scene,
-            x: this.x + 10,
-            y: this.y - this.height + 20,
-            key: 'player-bullet.png',
-            polygonKey: 'playerBullet',
-            bulletProperties: {
-              speed: -10,
-            },
-            collisionCategory: this.collsionCategory,
-          })
-        );
-
-        this.lastShoot = this.scene.time.now;
-      }
-    }
+  private handleDragFlying(pointer: { x: number }): void {
+    if (!this.scene.input.activePointer.isDown) { return; }
+    this.setX(pointer.x);
   }
+
+  private handleShooting = throttle((): void => {
+    if (this.bullets.getLength() < 80) { // just a safeguard, this should never happen
+      this.bullets.add(
+        new Bullet({
+          scene: this.scene,
+          x: this.x - 10,
+          y: this.y - this.height + 20,
+          key: 'player-bullet.png',
+          polygonKey: 'playerBullet',
+          bulletProperties: {
+            speed: -10,
+          },
+        })
+      );
+      this.bullets.add(
+        new Bullet({
+          scene: this.scene,
+          x: this.x + 10,
+          y: this.y - this.height + 20,
+          key: 'player-bullet.png',
+          polygonKey: 'playerBullet',
+          bulletProperties: {
+            speed: -10,
+          },
+        })
+      );
+    }
+  }, shotRate);
 
   public gotHurt() {
     // update lives

@@ -11,6 +11,7 @@
     "webpack-dev-server": "3.9.0"
   },
   "dependencies": {
+    "lodash.throttle": "^4.1.1",
     "phaser": "^3.22.0"
   },
   "scripts": {

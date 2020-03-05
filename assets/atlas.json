@@ -1,7 +1,7 @@
 {
 	"textures": [
 		{
-			"image": "atlas.png",
+			"image": "atlas-0.png",
 			"format": "RGBA8888",
 			"size": {
 				"w": 901,
@@ -30,8 +30,8 @@
 						"h": 238
 					},
 					"anchor": {
-						"x": 0.51129944,
-						"y": 0.44117647
+						"x": 0.5,
+						"y": 0.5
 					}
 				},
 				{
@@ -765,6 +765,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:c58b88902d04c4ea5d9ce0e1782898de:0b97cc1086050bac47b37d5424fdea87:cbce6b53f0f49e0bf15173c25c41f876$"
+		"smartupdate": "$TexturePacker:SmartUpdate:41b6db9091f700f9dba9d30508179f94:0b97cc1086050bac47b37d5424fdea87:cf935fe037ea9b5d3744d532996e235e$"
 	}
 }
