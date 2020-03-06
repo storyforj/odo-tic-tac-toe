@@ -11,14 +11,8 @@ export class GameScene extends Phaser.Scene {
   constructor() {
     super({
       key: 'GameScene',
-      active: true,
+      active: false,
     });
-  }
-
-  preload() {
-    this.load.multiatlas('sceneatlas', 'assets/atlas.json', 'assets');
-    this.load.css('styles/styles');
-    this.load.json('bodies', 'assets/atlasBodies.json');
   }
 
   init(): void {

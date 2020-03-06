@@ -2,11 +2,12 @@ import 'phaser';
 
 import { GameScene } from './scenes/GameScene';
 import { IntroScene } from './scenes/IntroScene';
+import { BootScene } from './scenes/BootScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'game',
-  scene: [GameScene, IntroScene],
+  scene: [BootScene, GameScene, IntroScene],
   input: {
     touch: true,
     mouse: true,
