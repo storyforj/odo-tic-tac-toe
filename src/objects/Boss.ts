@@ -4,6 +4,11 @@ import Sequencer, { Trigger } from '../helpers/Sequencer';
 import { Bullet } from './Bullet';
 
 export type BossUpdater = {
+  hp: {
+    boss: number,
+    leftEngineHP: number,
+    rightEngineHP: number,
+  },
   update: () => void
 };
 
@@ -12,10 +17,13 @@ const explosionAmount = 10000;
 export default function createBoss(scene: Phaser.Scene): BossUpdater {
   const bodies = scene.cache.json.get('bodies');
 
-  let hp: number = 21500;
-  let leftEngineHP: number = 1000;
+  const hp = {
+    boss: 21500,
+    leftEngineHP: 1000,
+    rightEngineHP: 1000,
+  };
+
   let leftEngineDestroyed: boolean = false;
-  let rightEngineHP: number = 1000;
   let rightEngineDestroyed: boolean = false;
 
   const bossSprite: Phaser.Physics.Matter.Sprite = scene.matter.add.sprite(
@@ -30,28 +38,28 @@ export default function createBoss(scene: Phaser.Scene): BossUpdater {
   function bodyHit(bullet: Bullet): void {
     bullet.createBulletExplosion();
     bullet.destroy();
-    hp -= 1;
+    hp.boss -= 1;
   }
 
   function leftEngineHit(bullet: Bullet): void {
-    if (leftEngineHP === 0 && !leftEngineDestroyed) {
+    if (hp.leftEngineHP === 0 && !leftEngineDestroyed) {
       leftEngineDestroyed = true;
-      hp -= explosionAmount;
+      hp.boss -= explosionAmount;
       bullet.destroy();
-    } else if (leftEngineHP > 0) {
-      leftEngineHP -= 1;
+    } else if (hp.leftEngineHP > 0) {
+      hp.leftEngineHP -= 1;
       bullet.createBulletExplosion();
       bullet.destroy();
     }
   }
 
   function rightEngineHit(bullet: Bullet): void {
-    if (rightEngineHP === 0 && !rightEngineDestroyed) {
+    if (hp.rightEngineHP === 0 && !rightEngineDestroyed) {
       rightEngineDestroyed = true;
-      hp -= explosionAmount;
+      hp.boss -= explosionAmount;
       bullet.destroy();
-    } else if (rightEngineHP > 0) {
-      rightEngineHP -= 1;
+    } else if (hp.rightEngineHP > 0) {
+      hp.rightEngineHP -= 1;
       bullet.createBulletExplosion();
       bullet.destroy();
     }
@@ -143,13 +151,14 @@ export default function createBoss(scene: Phaser.Scene): BossUpdater {
         });
       },
       shouldRemove: (): boolean => {
-        return hp <= 0;
+        return hp.boss <= 0;
       },
       shouldActivate: (): boolean => true,
     } as Trigger,
   ]);
 
   return {
+    hp,
     update: () => {
       sequencer.update();
     }

@@ -1,3 +1,5 @@
+import * as ODO from '@odogames/js-sdk';
+
 import { Player } from '../objects/Player';
 import createBoss, { BossUpdater } from '../objects/Boss';
 import { Enemy } from '../objects/Enemy';
@@ -121,6 +123,11 @@ export class GameScene extends Phaser.Scene {
     if (this.player.active) {
       this.player.update();
       this.boss.update();
+    }
+
+    if (this.boss.hp.boss <= 0) {
+      const odo: ODO.Odo = this.registry.get('odo') as ODO.Odo;
+      odo.trigger(ODO.Triggers.finish);
     }
 
     if (this.enemies && this.enemies.children.size === 0 && !this.enemiesWillBeCreatedTimer) {

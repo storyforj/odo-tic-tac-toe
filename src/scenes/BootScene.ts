@@ -21,6 +21,9 @@ export class BootScene extends Phaser.Scene {
       this.scene.start('GameScene');
       this.scene.start('IntroScene');
     });
+    odo.events.on(ODO.Events.restart, () => {
+      this.scene.get('GameScene').scene.restart();
+    });
     odo.trigger(ODO.Triggers.ready);
   }
 }
