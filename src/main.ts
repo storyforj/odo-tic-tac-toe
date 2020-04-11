@@ -23,8 +23,8 @@ const config: Phaser.Types.Core.GameConfig = {
   scale: {
     parent: 'game',
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 420,
+    autoCenter: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+    width: 350,
     height: 700,
   },
   render: { pixelArt: true, antialias: true },
