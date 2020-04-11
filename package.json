@@ -17,7 +17,8 @@
   },
   "scripts": {
     "dev": "webpack --mode development && webpack-dev-server --mode development",
-    "build": "webpack --mode production && webpack-dev-server --mode production"
+    "build": "webpack --mode production && webpack-dev-server --mode production",
+    "compress": "tar -czvf game-id-1.tar.gz assets dist styles index.html"
   },
   "repository": {
     "type": "git",
