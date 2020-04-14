@@ -62,14 +62,14 @@ export class IntroScene extends Phaser.Scene {
         this.textBox.lineStyle(4, 0xffffff, 1);
         //  32px radius on the corners
         this.textBox.strokeRoundedRect(
-          this.sys.canvas.width / 2,
+          20,
           (this.sys.canvas.height / 2) - textBoxSizeHeight / 2,
           textBoxSizeWidth,
           textBoxSizeHeight,
           8,
         );
         this.text = this.add.text(
-          this.sys.canvas.width / 2 + 10,
+          30,
           (this.sys.canvas.height / 2) - textBoxSizeHeight / 2 + 5,
           '',
           {
